@@ -41,3 +41,7 @@ jobs:
       - name: Run tests
         working-directory: forum
         run: ./gradlew test
+
+      - name: Build with Gradle (no tests)
+        working-directory: forum
+        run: ./gradlew clean build -x test
