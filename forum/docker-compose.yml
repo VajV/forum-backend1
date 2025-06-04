@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: forum_postgres
+    environment:
+      POSTGRES_DB: forumdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rootroot
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: forumdb
+      DB_USER: postgres
+      DB_PASS: rootroot
+
+volumes:
+  pgdata:
