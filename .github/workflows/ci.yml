@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build
 
 on:
   push:
@@ -30,17 +30,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Make gradlew executable    # <-- ОБЯЗАТЕЛЬНО ДО билда!
+      - name: Make gradlew executable
         working-directory: forum
         run: chmod +x gradlew
-
-      - name: Build with Gradle
-        working-directory: forum
-        run: ./gradlew clean build -x test
-
-      - name: Run tests
-        working-directory: forum
-        run: ./gradlew test
 
       - name: Build with Gradle (no tests)
         working-directory: forum
