@@ -33,6 +33,10 @@ jobs:
       - name: Build with Gradle
         working-directory: forum
         run: ./gradlew clean build -x test
+        
+      - name: Make gradlew executable
+        working-directory: forum
+        run: chmod +x gradlew 
 
       - name: Run tests
         working-directory: forum
