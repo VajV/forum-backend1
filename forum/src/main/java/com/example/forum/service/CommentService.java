@@ -9,6 +9,7 @@ import com.example.forum.model.Post;
 import com.example.forum.repository.CommentRepository;
 import com.example.forum.repository.PostRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,18 +18,24 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Scope("prototype")
+
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final PostService postService;
 
-    public CommentService(CommentRepository commentRepository, PostRepository postRepository) {
+    public CommentService(CommentRepository commentRepository,
+                          PostRepository postRepository,
+                          PostService postService) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
+        this.postService = postService;
     }
 
     public List<CommentResponseDto> getCommentsByPost(Long postId) {
         log.info("Получение комментариев для поста postId={}", postId);
-        List<Comment> comments = commentRepository.findByPostId(postId);
+        List<Comment> comments = commentRepository.findByPostIdWithPost(postId);
         if (comments.isEmpty()) {
             throw new ResourceNotFoundException("No comments found for post id: " + postId);
         }
@@ -60,10 +67,8 @@ public class CommentService {
         dto.setAuthor(comment.getAuthor());
         dto.setContent(comment.getContent());
         dto.setCreatedAt(comment.getCreatedAt());
-        // Можно возвращать краткий пост или просто его id, если не хочешь полный PostResponseDto:
-        PostResponseDto postDto = new PostResponseDto();
-        postDto.setId(comment.getPost().getId());
-        postDto.setTitle(comment.getPost().getTitle());
+
+        PostResponseDto postDto = postService.getPost(comment.getPost().getId());
         dto.setPost(postDto);
         return dto;
     }

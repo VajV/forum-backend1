@@ -28,6 +28,10 @@ public class PostController {
             summary = "Получить посты по категории",
             description = "Возвращает все посты, относящиеся к определённой категории"
     )
+    @GetMapping("/demo")
+    public String demo() {
+        return postService.sayHello();
+    }
     @ApiResponse(responseCode = "200", description = "Посты найдены",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponseDto.class)))
     @GetMapping("/category/{categoryId}")

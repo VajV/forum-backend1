@@ -36,6 +36,8 @@ public class Post {
     private String title;
 
     @Lob
+    @Basic(fetch = FetchType.EAGER)
+    @Column(columnDefinition = "TEXT")
     @NotBlank(message = "Content cannot be blank")
     @Size(max = 10000, message = "Post is too long (max 10,000 characters)")
     @Schema(description = "Содержимое поста", example = "Здесь размещен гайд по герою Лейла...")

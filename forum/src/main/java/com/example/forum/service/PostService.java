@@ -1,5 +1,6 @@
 package com.example.forum.service;
 
+import com.example.forum.annotation.MyAbstract;
 import com.example.forum.dto.PostRequestDto;
 import com.example.forum.dto.PostResponseDto;
 import com.example.forum.dto.CategoryResponseDto;
@@ -9,17 +10,26 @@ import com.example.forum.model.Category;
 import com.example.forum.model.Comment;
 import com.example.forum.model.Post;
 import com.example.forum.repository.CategoryRepository;
+import com.example.forum.repository.CommentRepository;
 import com.example.forum.repository.PostRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class PostService {
+public class PostService{
+    Map<String, Integer> map = new HashMap<>();
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
 
@@ -28,10 +38,17 @@ public class PostService {
         this.categoryRepository = categoryRepository;
     }
 
-    // Получить все посты по категории (DTO)
+    @MyAbstract
+    public String sayHello() {
+        System.out.println("Метод sayHello выполняется");
+        return "Hello from service!";
+    }
+    @Transactional(readOnly = true)
     public List<PostResponseDto> getPostsByCategory(Long categoryId) {
-        log.info("Получение постов по категории id={}", categoryId);
         List<Post> posts = postRepository.findByCategoryId(categoryId);
+        for (Post post : posts) {
+            Hibernate.initialize(post.getComments());
+        }
         return posts.stream().map(this::toResponseDto).collect(Collectors.toList());
     }
 
@@ -80,12 +97,12 @@ public class PostService {
         catDto.setName(post.getCategory().getName());
         dto.setCategory(catDto);
 
-        // Comments
         if (post.getComments() != null) {
-            List<CommentResponseDto> comments = post.getComments().stream().map(this::toCommentDto).collect(Collectors.toList());
+            List<CommentResponseDto> comments = post.getComments().stream()
+                    .map(this::toCommentDto)
+                    .collect(Collectors.toList());
             dto.setComments(comments);
         }
-
         return dto;
     }
 

@@ -2,6 +2,8 @@
 
 Backend для форума по Mobile Legends: Bang Bang — REST API на Spring Boot для публикации гайдов, постов и комментариев.
 
+---
+
 ## 🚀 Технологии
 
 - Java 17
@@ -12,10 +14,11 @@ Backend для форума по Mobile Legends: Bang Bang — REST API на Spr
 - Swagger/OpenAPI (springdoc-openapi)
 - Gradle
 
+---
+
 ## 📦 Быстрый старт
 
-1. **Клонируй репозиторий**  
-   (или распакуй архив):
+1. **Клонируй репозиторий**
    ```bash
    git clone https://github.com/your-username/forum-api.git
    cd forum-api

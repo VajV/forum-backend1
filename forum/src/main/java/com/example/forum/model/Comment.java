@@ -38,7 +38,7 @@ public class Comment {
     @Schema(description = "Дата и время создания комментария", example = "2024-06-02T21:10:00")
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
     @JsonIgnore
     @Schema(description = "Пост, к которому оставлен комментарий")
