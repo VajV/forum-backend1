@@ -26,15 +26,18 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('forum/**/*.gradle*', 'forum/**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
+        working-directory: forum
         run: ./gradlew clean build -x test
 
       - name: Run tests
+        working-directory: forum
         run: ./gradlew test
 
       - name: Build Docker image
+        working-directory: forum
         run: docker build -t myforumapp:latest .
