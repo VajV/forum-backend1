@@ -30,18 +30,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Make gradlew executable    # <-- ОБЯЗАТЕЛЬНО ДО билда!
+        working-directory: forum
+        run: chmod +x gradlew
+
       - name: Build with Gradle
         working-directory: forum
         run: ./gradlew clean build -x test
-        
-      - name: Make gradlew executable
-        working-directory: forum
-        run: chmod +x gradlew 
 
       - name: Run tests
         working-directory: forum
         run: ./gradlew test
-
-      - name: Build Docker image
-        working-directory: forum
-        run: docker build -t myforumapp:latest .
